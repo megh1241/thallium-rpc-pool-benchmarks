@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+#PBS -l select=4:ncpus=12:ngpus=0
+#PBS -l place=scatter
+#PBS -l filesystems=grand
+#PBS -l walltime=00:05:00
+#PBS -A VeloC
+#PBS -q debug-scaling
+
+REPO_DIR=$HOME/thallium-rpc-pool-benchmark
+INIT_SCRIPT=$HOME/thallium-rpc-pool-benchmark/init-env.sh
+
+cd $REPO_DIR
+source $INIT_SCRIPT
+
+/opt/cray/pe/pals/1.1.7/bin/aprun -n 4 -d 6 ./server &
+
+sleep 10
+
+/opt/cray/pe/pals/1.1.7/bin/aprun -n 4 -d 4 ./client
+
